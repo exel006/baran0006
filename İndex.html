@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Almanca 0’dan C2’ye Öğrenme</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    background: #f0f4f8;
+    color: #333;
+  }
+  h1, h2 {
+    text-align: center;
+    color: #00509e;
+  }
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin-top: 10px;
+    cursor: pointer;
+    background-color: #00509e;
+    color: white;
+    border: none;
+    border-radius: 5px;
+  }
+  button:disabled {
+    background-color: #a0aec0;
+    cursor: not-allowed;
+  }
+  .question {
+    margin-bottom: 15px;
+  }
+  input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    font-size: 15px;
+    margin-top: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  #result {
+    font-weight: bold;
+    margin-top: 15px;
+    text-align: center;
+  }
+  #levelSelector {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  #levelSelector button {
+    background-color: #0077cc;
+  }
+</style>
+</head>
+<body>
+
+<h1>Almanca 0’dan C2’ye Öğrenme</h1>
+
+<div id="levelSelector">
+  <button data-level="0">Seviye 0</button>
+  <button data-level="A1">Seviye A1</button>
+  <button data-level="B1">Seviye B1</button>
+  <button data-level="C2">Seviye C2</button>
+</div>
+
+<div id="quizContainer"></div>
+
+<button id="checkBtn" disabled>Cevapları Kontrol Et</button>
+
+<div id="result"></div>
+
+<script>
+// Sorular ve cevaplar
+const data = {
+  "0": [
+    { q: "Wie sagt man 'Merhaba' auf Deutsch?", a: "Hallo" },
+    { q: "Was bedeutet 'Haus'?", a: "Ev" },
+  ],
+  "A1": [
+    { q: "Wie heißt 'kitap' auf Deutsch?", a: "Buch" },
+    { q: "Was bedeutet 'Freund'?", a: "Arkadaş" },
+  ],
+  "B1": [
+    { q: "Was ist das Synonym von 'schnell'?", a: "rasch" },
+    { q: "Wie sagt man 'erklären' auf Türkisch?", a: "açıklamak" },
+  ],
+  "C2": [
+    { q: "Was bedeutet 'die Herausforderung'?", a: "zorluk" },
+    { q: "Wie lautet das Synonym von 'ausgezeichnet'?", a: "hervorragend" },
+    { q: "Ergänzen Sie den Satz: 'Trotz der ... Schwierigkeiten blieb sie optimistisch.'", a: "ungeheuren" }
+  ]
+};
+
+let currentLevel = null;
+
+// Elementleri seç
+const quizContainer = document.getElementById("quizContainer");
+const checkBtn = document.getElementById("checkBtn");
+const resultDiv = document.getElementById("result");
+const levelButtons = document.querySelectorAll("#levelSelector button");
+
+// Seviye seçimi yapınca testi oluştur
+levelButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    currentLevel = btn.getAttribute("data-level");
+    loadQuiz(currentLevel);
+  });
+});
+
+function loadQuiz(level) {
+  resultDiv.textContent = "";
+  checkBtn.disabled = false;
+  quizContainer.innerHTML = "";
+  
+  data[level].forEach((item, i) => {
+    const div = document.createElement("div");
+    div.className = "question";
+    div.innerHTML = `
+      <label>${item.q}</label><br/>
+      <input type="text" id="answer${i}" placeholder="Cevabını yaz..." />
+    `;
+    quizContainer.appendChild(div);
+  });
+}
+
+// Cevapları kontrol et
+checkBtn.addEventListener("click", () => {
+  if (!currentLevel) return;
+  let score = 0;
+  const answers = data[currentLevel];
+  
+  answers.forEach((item, i) => {
+    const userAnswer = document.getElementById(`answer${i}`).value.trim().toLowerCase();
+    if (userAnswer === item.a.toLowerCase()) {
+      score++;
+    }
+  });
+  
+  resultDiv.textContent = `Doğru cevap sayısı: ${score} / ${answers.length}`;
+});
+
+</script>
+
+</body>
+</html>
